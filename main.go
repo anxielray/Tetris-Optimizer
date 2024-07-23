@@ -27,7 +27,7 @@ func main() {
 	defer file.Close()
 
 	// declaring a 3D slice of string...(the board)
-	myArray := tetra.ReadInput(file)
+	myArray := tetra.Brain_Storm(file)
 
 	// the 3D slice is then taken for the Arithmetic solving
 	tetra.GeniusSolver(myArray)

@@ -7,8 +7,11 @@ import (
 
 var mySquare [][]string
 
+//the back-tracking algorithm
 func BackTrackAlgorithm(tetrominoes [][4][4]string, n int) bool {
-	if n == len(tetrominoes) { // base condition when all tetrominoes are placed, board is solved
+
+	//give the command if all tetrominoes are contained in the board
+	if n == len(tetrominoes) {
 		return true
 	}
 	for i := 0; i < len(mySquare); i++ {

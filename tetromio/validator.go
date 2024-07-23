@@ -1,27 +1,33 @@
 package tetromio
 
-func ValidateTetro(tetromino [4][4]string) bool {
+/*
+The function is meant to validate the tetromino. The function check for the number of hashes found in
+the tetromino, which should be exactly 4 and validates the hash conections, which should be either
+6 or 8(for the square tetromino).
+*/
+func MatrixMorphologist(tetromino [4][4]string) bool {
 	c, d := 0, 0
 
-	for a, elem := range tetromino {
-		for b, elem2 := range elem {
-			if elem2 != "." {
+	for i, block := range tetromino {
+		for x, minorBlock := range block {
+			if minorBlock != "." {
 				d++
-				if a+1 < 4 && tetromino[a+1][b] != "." {
+				if i+1 < 4 && tetromino[i+1][x] != "." {
 					c++
 				}
-				if a-1 >= 0 && tetromino[a-1][b] != "." {
+				if i-1 >= 0 && tetromino[i-1][x] != "." {
 					c++
 				}
-				if b+1 < 4 && tetromino[a][b+1] != "." {
+				if x+1 < 4 && tetromino[i][x+1] != "." {
 					c++
 				}
-				if b-1 >= 0 && tetromino[a][b-1] != "." {
+				if x-1 >= 0 && tetromino[i][x-1] != "." {
 					c++
 				}
 			}
 		}
 	}
+
 	if d != 4 {
 		return false
 	}
@@ -31,12 +37,14 @@ func ValidateTetro(tetromino [4][4]string) bool {
 	return false
 }
 
-func ValidInsertion(i, j int, tetro [4][4]string) bool {
-	//set the x-y dimensions of the tetromino
+/*
+The function...!
+*/
+func ValidInsertion(x, y int, tetro [4][4]string) bool {
 	for a := 0; a < 4; a++ {
 		for b := 0; b < 4; b++ {
 			if tetro[a][b] != "." {
-				if i+a == len(mySquare) || j+b == len(mySquare) || mySquare[i+a][j+b] != "." {
+				if x+a == len(mySquare) || y+b == len(mySquare) || mySquare[x+a][y+b] != "." {
 					return false
 				}
 			}
