@@ -11,49 +11,46 @@ import (
 /*
 this function takes in an io writer and prints out a 3D slice.
 */
-func ReadInput(file io.Reader) [][4][4]string {
-	var tetrominoArray [][4][4]string
+func Brain_Storm(file io.Reader) [][4][4]string {
+	var tetrominoBox [][4][4]string
 	var tetromino [4][4]string
-
-	// read from the test file line by line
 	scanner := bufio.NewScanner(file)
-	/*
-		Initialize; i - , in -, flag -,
-	*/
-	i, in, flag, alpha := 0, 0, true, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	var (
+		i              = 0
+		tetrominoCount = 0
+		latin          = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		findTetromino  = true
+	)
 	for scanner.Scan() {
-
-		// call each line str
 		str := scanner.Text()
 		if str == "" {
-			if flag {
-				flag = false
+			if findTetromino {
+				findTetromino = false
 				continue
 			} else {
 				fmt.Println("ERROR")
 				os.Exit(0)
 			}
 		}
-		var arr [4]string
-
-		// if the line doesn't have exactly 4 characters
+		var converts [4]string
 		if len(str) != 4 {
 			fmt.Println("ERROR")
 			os.Exit(0)
 		}
-		arr = ConvertToAlphabet(str, alpha, arr, in)
-		tetromino[i] = arr
+		converts = AlphamConvert(str, latin, converts, tetrominoCount)
+		tetromino[i] = converts
 		i++
+		//reset the variables back to fatory settings for the next tetromino
 		if i == 4 {
-			flag = true
+			findTetromino = true
 			i = 0
-			in++
-			if !ValidateTetro(tetromino) {
+			tetrominoCount++
+			if !MatrixMorphologist(tetromino) {
 				fmt.Println("ERROR")
-				os.Exit(1)
+				os.Exit(0)
 			}
 			tetromino = OptimizeTetromino(tetromino)
-			tetrominoArray = append(tetrominoArray, tetromino)
+			tetrominoBox = append(tetrominoBox, tetromino)
 		}
 
 	}
@@ -61,7 +58,7 @@ func ReadInput(file io.Reader) [][4][4]string {
 		log.Fatal(err)
 		os.Exit(0)
 	}
-	return tetrominoArray
+	return tetrominoBox
 }
 
 func PrintInputs(myArray [][4][4]string) {
@@ -91,17 +88,22 @@ func SquareCreator(n int) [][]string {
 	return Square
 }
 
-//the function takes a 
-func ConvertToAlphabet(str, alpha string, arr [4]string, in int) [4]string {
-	for ind := range arr {
+/*
+AlphamConvert converts a 4-character string `str` using `latin` for substitution:
+- '.' is copied directly to `converts`.
+- '#' is replaced by `latin[in]`.
+Any other character causes an "ERROR" and exits.
+*/
+func AlphamConvert(str, alpha string, converts [4]string, in int) [4]string {
+	for ind := range converts {
 		if rune(str[ind]) == '.' {
-			arr[ind] = "."
+			converts[ind] = "."
 		} else if rune(str[ind]) == '#' {
-			arr[ind] = string(alpha[in])
+			converts[ind] = string(alpha[in])
 		} else {
 			fmt.Println("ERROR")
 			os.Exit(0)
 		}
 	}
-	return arr
+	return converts
 }
