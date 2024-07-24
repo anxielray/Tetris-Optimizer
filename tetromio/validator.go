@@ -38,13 +38,17 @@ func MatrixMorphologist(tetromino [4][4]string) bool {
 }
 
 /*
-The function...!
+The function takes the indices of the row and the column currently
+and checks if there will be a mistake of any sort  when
+placing the tetrominoes onto the board, i.e. over-lapping the normal
+length of thr tetromino or maybe trying to place a tetromino where
+another tetromino already occupies at the moment.
 */
-func ValidInsertion(x, y int, tetro [4][4]string) bool {
+func ValidInsertion(currentRowIndex, currentColumnIndex int, tetro [4][4]string) bool {
 	for a := 0; a < 4; a++ {
 		for b := 0; b < 4; b++ {
 			if tetro[a][b] != "." {
-				if x+a == len(mySquare) || y+b == len(mySquare) || mySquare[x+a][y+b] != "." {
+				if currentRowIndex+a == len(grid) || currentColumnIndex+b == len(grid) || grid[currentRowIndex+a][currentColumnIndex+b] != "." {
 					return false
 				}
 			}
