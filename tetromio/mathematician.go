@@ -1,38 +1,48 @@
 package tetromio
 
+/*
+The function takes a 4x4 slice of string and returns the same,
+only making some modifications on the tetromino block. It checks whether
+there exists any empty column and attempts to push the tetromino block to the left
+as well it checks for an empty row and tries to push the tetromino to the
+very top. The aim is to place the tetrtomino as top-left as possible
+*/
 func OptimizeTetromino(tetromino [4][4]string) [4][4]string {
-	//optimzes tetromino
-	i := 0
+	rowIndex := 0
 	for {
-		zeroes := 0
-		for j := 0; j < 4; j++ {
-			if tetromino[i][j] == "." {
-				zeroes++
+		emptyBlocks := 0
+		for columnIndex := 0; columnIndex < 4; columnIndex++ {
+			if tetromino[rowIndex][columnIndex] == "." {
+				emptyBlocks++
 			}
 		}
-		if zeroes == 4 { //if row is all zeroes, shift by 1 row to top
-			tetromino = ShiftVertical(tetromino)
+		if emptyBlocks == 4 {
+			tetromino = PushUp(tetromino)
 			continue
 		}
 		break
 	}
 	for {
-		zeroes := 0
-		for j := 0; j < 4; j++ {
-			if tetromino[j][i] == "." {
-				zeroes++
+		emptyBlocks := 0
+		for row := 0; row < 4; row++ {
+			if tetromino[row][rowIndex] == "." {
+				emptyBlocks++
 			}
 		}
-		if zeroes == 4 { //if col is all zeroes, shift by 1 col to left
-			tetromino = ShiftHorizontal(tetromino)
+		if emptyBlocks == 4 {
+			tetromino = PushLeft(tetromino)
 			continue
 		}
 		break
 	}
 	return tetromino
 }
-func ShiftVertical(tetromino [4][4]string) [4][4]string {
-	//shifts tetromino row by 1
+
+/*
+The function will check if there is an empty space at the top(a column)
+If found the function returns the tetromino pushed to the top.
+*/
+func PushUp(tetromino [4][4]string) [4][4]string {
 	temp := tetromino[0]
 	tetromino[0] = tetromino[1]
 	tetromino[1] = tetromino[2]
@@ -40,24 +50,37 @@ func ShiftVertical(tetromino [4][4]string) [4][4]string {
 	tetromino[3] = temp
 	return tetromino
 }
-func ShiftHorizontal(tetromino [4][4]string) [4][4]string {
-	//shifts tetromino col by 1
-	tetromino = Transpose(tetromino)
-	tetromino = ShiftVertical(tetromino)
-	tetromino = Transpose(tetromino)
+
+/*
+This will push the tetromino to the very left of its 4x4 grid
+this make the placements of the tetrominoes in the board to
+be much efficient.
+*/
+func PushLeft(tetromino [4][4]string) [4][4]string {
+	tetromino = flipper(tetromino)
+	tetromino = PushUp(tetromino)
+	tetromino = flipper(tetromino)
 	return tetromino
 }
-func Transpose(slice [4][4]string) [4][4]string {
-	//transpose tetromino
-	xl := len(slice[0])
-	yl := len(slice)
+
+/*
+The function flips the tetromino like a square, geometrically placed,
+such that the edges(2 of the vertex) probably the opposite ones.
+If a straight vertical line is drawn to march the vertices,
+we mark the other vertex to the left as 'a' and the other to the
+right as b, now we flip the square, such that the a occupies the 
+previous position of b, and vice versa.
+*/
+func flipper(tetromino [4][4]string) [4][4]string {
+	xl := len(tetromino[0])
+	yl := len(tetromino)
 	var result [4][4]string
 	for i := range result {
 		result[i] = [4]string{}
 	}
 	for i := 0; i < xl; i++ {
 		for j := 0; j < yl; j++ {
-			result[i][j] = slice[j][i]
+			result[i][j] = tetromino[j][i]
 		}
 	}
 	return result
