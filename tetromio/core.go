@@ -9,7 +9,12 @@ import (
 )
 
 /*
-this function takes in an io writer and prints out a 3D slice.
+This function takes in an io writer and prints out a 3D slice.
+The function scans the file line by line and snatches the tetrominoes
+when it finds a valid end of the tetromino. The tetromino is then converted
+(the '#' to be specific) are changed by their corresponding latin letters.
+After which, the tetromino is validated than optimized, before being used
+on the board.
 */
 func Brain_Storm(file io.Reader) [][4][4]string {
 	var tetrominoBox [][4][4]string
@@ -40,7 +45,6 @@ func Brain_Storm(file io.Reader) [][4][4]string {
 		converts = AlphamConvert(str, latin, converts, tetrominoCount)
 		tetromino[i] = converts
 		i++
-		//reset the variables back to fatory settings for the next tetromino
 		if i == 4 {
 			findTetromino = true
 			i = 0
@@ -61,21 +65,11 @@ func Brain_Storm(file io.Reader) [][4][4]string {
 	return tetrominoBox
 }
 
-func PrintInputs(myArray [][4][4]string) {
-	// Prints inputted tetrominoes
-	for _, tetromino := range myArray {
-		for j := 0; j < 4; j++ {
-			for k := 0; k < 4; k++ {
-				fmt.Printf("%s ", tetromino[j][k])
-			}
-			fmt.Printf("\n")
-		}
-		fmt.Println()
-	}
-}
-
-func SquareCreator(n int) [][]string {
-	// initializes a square
+/*
+The function will create the grid/board that will contain
+the tetrominoes. It initializes an empty board.
+*/
+func GridMaker(n int) [][]string {
 	var Square [][]string
 	var row []string
 	for i := 0; i < n; i++ {
@@ -89,7 +83,7 @@ func SquareCreator(n int) [][]string {
 }
 
 /*
-AlphamConvert converts a 4-character string `str` using `latin` for substitution:
+The function converts a 4-character string `str` using `latin` for substitution:
 - '.' is copied directly to `converts`.
 - '#' is replaced by `latin[in]`.
 Any other character causes an "ERROR" and exits.
